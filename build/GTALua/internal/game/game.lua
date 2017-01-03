@@ -85,21 +85,20 @@ function game.RequestWeaponAsset(weaponAsset)
 end
 
 -- Shoot a bullet between two coordinates
-function game.ShootBulletBetweenCoords(org, tgt, weapon, damage, speed)
+function game.ShootBulletBetweenCoords(org, tgt, weapon, damage, speed, owner)
 	weapon = weapon or WeaponPistol
 	damage = damage or 200
 	speed = speed or 200
+	owner = owner or -1
 	game.RequestWeaponAsset(weapon)
-	natives.GAMEPLAY.SHOOT_SINGLE_BULLET_BETWEEN_COORDS(org.x, org.y, org.z, tgt.x, tgt.y, tgt.z, damage, true, weapon, 0, true, false, speed)
+	natives.GAMEPLAY.SHOOT_SINGLE_BULLET_BETWEEN_COORDS(org.x, org.y, org.z, tgt.x, tgt.y, tgt.z, damage, true, weapon, owner, true, true, speed)
 end
 
 -- Convert World to Screen coordinates
 function game.WorldToScreen(p)
 	local m_screenX = CMemoryBlock(4)
 	local m_screenY = CMemoryBlock(4)
-	local screenX = nil
-	local screenY = nil
-	local result = nil
+	local screenX, screenY, result
 	if natives.GRAPHICS._WORLD3D_TO_SCREEN2D(p.x, p.y, p.z, m_screenX, m_screenY) then
 		screenX = m_screenX:ReadFloat(0)
 		screenY = m_screenY:ReadFloat(0)
@@ -107,6 +106,8 @@ function game.WorldToScreen(p)
 	else
 		result = nil
 	end
+	m_screenX:Release()
+	m_screenY:Release()
 	return result
 end
 
@@ -130,8 +131,8 @@ function game.GetRaycastTarget(distance, flags, entity)
 	local p2 = game.GetCoordsInFrontOfCam(distance)
 	local ray = natives.WORLDPROBE._CAST_RAY_POINT_TO_POINT(p1.x, p1.y, p1.z, p2.x, p2.y, p2.z, flags, entity, 7)
 	local m_hit = CMemoryBlock(4)
-	local m_endCoords = CMemoryBlock(24)
-	local m_surfaceNormal = CMemoryBlock(24)
+	local m_endCoords = CMemoryBlock(48)
+	local m_surfaceNormal = CMemoryBlock(48)
 	local m_entityHit = CMemoryBlock(4)
 	local enum = natives.WORLDPROBE._GET_RAYCAST_RESULT(ray, m_hit, m_endCoords, m_surfaceNormal, m_entityHit)
 	local hit = m_hit:ReadDWORD32(0) == 1
@@ -140,7 +141,7 @@ function game.GetRaycastTarget(distance, flags, entity)
 	local entityHit = nil
 	local ent = nil
 	if hit then
-		endCoords = {x=m_endCoords:ReadFloat(0), y=m_endCoords:ReadFloat(2), z=m_endCoords:ReadFloat(4)}
+		endCoords = {x=m_endCoords:ReadFloat(0), y=m_endCoords:ReadFloat(8), z=m_endCoords:ReadFloat(16)}
 		entityHit = m_entityHit:ReadDWORD32(0)
 		ent = Entity(entityHit)
 		if ent:IsPed() then

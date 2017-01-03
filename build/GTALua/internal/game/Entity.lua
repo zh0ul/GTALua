@@ -189,6 +189,7 @@ function Entity:AttachBlip()
 	end
 	return Blip(natives.UI.ADD_BLIP_FOR_ENTITY(self.ID))
 end
+
 function Entity:GetBlip()
 	self:_CheckExists()
 	local blip_id = natives.UI.GET_BLIP_FROM_ENTITY(self.ID)

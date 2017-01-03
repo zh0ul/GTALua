@@ -1,19 +1,13 @@
 -- Module
 include("modules/utils.lua")
+include("modules/zhoUtils.lua")
 include("modules/event.lua")
 include("modules/addon.lua")
 include("modules/scripthookv.lua")
 include("modules/console/console.lua")
 
 -- Extensions
-include("extensions/enums.lua")
-include("extensions/colors.lua")
 include("extensions/keycodes.lua")
-include("extensions/vehicles.lua")
-include("extensions/explosions.lua")
-include("extensions/weapons.lua")
-include("extensions/components.lua")
-include("extensions/pickups.lua")
 include("extensions/CNativeReg.lua")
 include("extensions/CScriptThread.lua")
 include("extensions/CScriptThread_EventHandlers.lua")

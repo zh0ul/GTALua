@@ -21,7 +21,7 @@ end
 -- Kill Thread
 function main_thread:KillThread(thread)
 	-- self-Check, you never know
-	if thread:GetName() == self:GetName() then return end
+--if thread:GetName() == self:GetName() then return end
 	
 	-- find & remove
 	for k,v in pairs(self.ThreadList) do
@@ -31,6 +31,12 @@ function main_thread:KillThread(thread)
 			return
 		end
 	end
+end
+
+function main_thread:OnError()
+  print("main_thread encountered an error!")
+  self:Wait(1)
+  self:Reset()
 end
 
 -- Register

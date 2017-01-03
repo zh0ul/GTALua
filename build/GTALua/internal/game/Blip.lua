@@ -214,7 +214,7 @@ end
 
 function Blip:ShowBlipNumber(b)
 	self:_CheckExists()
-	if b == true then
+	if b then
 		natives.UI.SHOW_NUMBER_ON_BLIP(self.ID, true)
 	else
 		natives.UI.HIDE_NUMBER_ON_BLIP(self.ID)

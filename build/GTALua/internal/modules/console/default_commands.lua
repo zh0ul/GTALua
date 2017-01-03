@@ -1,36 +1,39 @@
 -- help
 function console.cmd_help()
+  local tKeys = {}
 	print("List of available commands:")
 	print("----------------------------------------")
-	for k,v in pairs(console.Commands) do
-		if not utils.IsInArray(_deprecated_ConsoleCommands, k) then
-			print(k)
+  for k,v in pairs(console.Commands) do	tKeys[#tKeys+1] = k ; end
+	table.sort(tKeys)
+	for k,v in pairs(tKeys) do
+		if not utils.IsInArray(_deprecated_ConsoleCommands, v) then
+			print(v)
 		end
 	end
 	print("----------------------------------------")
 end
-console.RegisterCommand("help", console.cmd_help)
 
 -- Load Addon
 function console.cmd_load_addon(name)
 	-- Syntax
-	if name == nil then
+	if not name then
 		print("[GTALua] Syntax: load/reload [addon name]")
 		return
 	end
 
-	-- Load
+	-- Unload if loaded
+	if scripthookv.ThreadList[name] then print("[GTALua] Unloading "..name) ; addon.Unload(name) end
+
+  -- Now load
 	print("[GTALua] Loading ", name, "...")
 	addon.Load(name)
 	print("")
 end
-console.RegisterCommand("reload", console.cmd_load_addon)
-console.RegisterCommand("load", console.cmd_load_addon)
 
 -- Unload Addon
 function console.cmd_unload_addon(name)
 	-- Syntax
-	if name == nil then
+	if not name then
 		print("[GTALua] Syntax: unload [addon name]")
 		return
 	end
@@ -40,29 +43,26 @@ function console.cmd_unload_addon(name)
 	addon.Unload(name)
 	print("")
 end
-console.RegisterCommand("unload", console.cmd_unload_addon)
 
 -- Reload All Addons
 function console.cmd_reload_all_addons()
 	print("[GTALua] Reloading all addons...")
 	for  _,thread in pairs(scripthookv.ThreadList) do
 		local name = thread:GetName()
-		if name ~= "main_thread" then addon.Load(name) end
+		if name ~= "main_thread" then addon.Unload(name) ; addon.Load(name) end
 	end
 	print("")
 end
-console.RegisterCommand("reloadall", console.cmd_reload_all_addons)
 
 -- Show the running threads
 function console.cmd_show_all_addons()
 	print("[GTALua] List of all loaded addons...")
 	for  _,thread in pairs(scripthookv.ThreadList) do
 		local name = thread:GetName()
-		print(name," Active:",thread:IsActive()," Running:",thread:IsRunning())
+		print(string.format( "%5s %-20s %8s %-5s %8s %-5s", "Name:", name,"Active:", tostring(thread:IsActive()), "Running:", tostring(thread:IsRunning()) ) )
 	end
 	print("")
 end
-console.RegisterCommand("showall", console.cmd_show_all_addons)
 
 -- Execute a Lua command
 function console.cmd_lua(...)
@@ -77,4 +77,13 @@ function console.cmd_lua(...)
 		error("Input didn't evaluate to a function.")
 	end
 end
+
+
+-- Register default console commands.
+
+console.RegisterCommand("help", console.cmd_help)
+console.RegisterCommand("unload", console.cmd_unload_addon)
+console.RegisterCommand("reload", console.cmd_load_addon)
+console.RegisterCommand("load", console.cmd_load_addon)
+console.RegisterCommand("reloadall", console.cmd_reload_all_addons)
 console.RegisterCommand("lua", console.cmd_lua)

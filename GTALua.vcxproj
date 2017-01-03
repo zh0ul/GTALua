@@ -68,6 +68,7 @@
     <ClInclude Include="src\Memory\minhook\src\HDE\table32.h" />
     <ClInclude Include="src\Memory\minhook\src\HDE\table64.h" />
     <ClInclude Include="src\Memory\minhook\src\trampoline.h" />
+    <ClInclude Include="src\ScriptBinds\LB_ScriptHookV.h" />
     <ClInclude Include="src\ScriptBinds\ScriptBinds.h" />
     <ClInclude Include="src\ScriptEngine\Natives.h" />
     <ClInclude Include="src\ScriptEngine\rage.h" />
@@ -89,6 +90,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1705AE25-2E07-44DD-B4B7-A002FA02D853}</ProjectGuid>
     <RootNamespace>GTALua</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -96,7 +98,8 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
+    <CLRSupport>false</CLRSupport>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">

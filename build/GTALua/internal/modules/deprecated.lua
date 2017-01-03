@@ -20,7 +20,7 @@ function _deprecated_command(command)
   table.insert(_deprecated_ConsoleCommands, command)
 end
 
-
+--[[
 -- Since 1.1.2
 
 -- Console : load_addon/reload_addon
@@ -40,3 +40,5 @@ function console.cmd_unload_addon_deprecated(name)
 end
 console.RegisterCommand("unload_addon", console.cmd_unload_addon_deprecated)
 _deprecated_command("unload_addon")
+
+--]]

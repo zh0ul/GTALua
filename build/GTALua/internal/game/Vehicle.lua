@@ -20,10 +20,10 @@ end
 --Set not needed
 function Vehicle:SetNotNeeded()
 	self:_CheckExists()
-	local c_vehicle_handle = CMemoryBlock(4)
-	c_vehicle_handle:WriteDWORD32(0, self.ID)
-	natives.ENTITY.SET_VEHICLE_AS_NO_LONGER_NEEDED(c_vehicle_handle)
-	c_vehicle_handle:Release()
+	local c_handle = CMemoryBlock(4)
+	c_handle:WriteDWORD32(0, self.ID)
+	natives.ENTITY.SET_VEHICLE_AS_NO_LONGER_NEEDED(c_handle)
+	c_handle:Release()
 end
 
 -- Is vehicle stuck on roof (returns true/false)
@@ -95,7 +95,7 @@ end
 -- Sets whether the vehicle engine is on.
 function Vehicle:SetEngineState(b)
 	self:_CheckExists()
-	natives.VEHICLE.SET_VEHICLE_ENGINE_ON(self.ID,b,true)
+	natives.VEHICLE.SET_VEHICLE_ENGINE_ON(self.ID,b,true, true)
 end
 
 -- Checks whether the vehicle is on all wheels
@@ -115,7 +115,7 @@ function Vehicle:SetNeonLights(enabled, r, g, b, location)
 	self:_CheckExists()
 	
 	-- on/off
-	if location == nil then
+	if not location then
 		natives.VEHICLE._SET_VEHICLE_NEON_LIGHT_ENABLED(self.ID, 0, enabled)
 		natives.VEHICLE._SET_VEHICLE_NEON_LIGHT_ENABLED(self.ID, 1, enabled)
 		natives.VEHICLE._SET_VEHICLE_NEON_LIGHT_ENABLED(self.ID, 2, enabled)
@@ -125,7 +125,7 @@ function Vehicle:SetNeonLights(enabled, r, g, b, location)
 	end
 	
 	-- color
-	if r == nil then return end
+	if not r then return end
 	if type(r) == "table" then
 		b = r.b
 		g = r.g
@@ -277,3 +277,35 @@ function Vehicle:SetWindowTint(t)
 	self:_CheckExists()
 	natives.VEHICLE.SET_VEHICLE_WINDOW_TINT(self.ID, t)
 end
+
+-- Get vehicle's Accent color
+function Vehicle:GetAccentColor()
+	self:_CheckExists()
+	local m_c = CMemoryBlock(4)
+	natives.VEHICLE._GET_VEHICLE_ACCENT_COLOR(self.ID, m_c)
+	local c = m_c:ReadDWORD32(0)
+	m_c:Release()
+	return c
+end
+
+-- Set vehicle's Accent color
+function Vehicle:SetAccentColor(c)
+	self:_CheckExists()
+	natives.VEHICLE._SET_VEHICLE_ACCENT_COLOR(self.ID, c)
+end	
+
+-- Get vehicle's Trim color
+function Vehicle:GetTrimColor()
+	self:_CheckExists()
+	local m_c = CMemoryBlock(4)
+	natives.VEHICLE._GET_VEHICLE_TRIM_COLOR(self.ID, m_c)
+	local c = m_c:ReadDWORD32(0)
+	m_c:Release()
+	return c
+end
+
+-- Set vehicle's Trim color
+function Vehicle:SetTrimColor(c)
+	self:_CheckExists()
+	natives.VEHICLE._SET_VEHICLE_TRIM_COLOR(self.ID, c)
+end	

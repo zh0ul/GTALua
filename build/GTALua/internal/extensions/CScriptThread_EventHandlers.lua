@@ -69,7 +69,16 @@ function CScriptThread:internal_EventHandlers_OnTick()
 			print("[Lua] ScriptThread "..self:GetName().." Event Handler Error: "..err)
 		end
 	end
-	
+
+ if  self:GetName() == "main_thread"
+ then
+     if RestartRequest and #RestartRequest > 0 and RestartRequest.dorestart
+     then
+         --RestartRequest:dorestart()
+         event.Call("RestartRequestDo")
+     end
+end
+
 	-- clear queue
 	self.EventQueue = {}
 end

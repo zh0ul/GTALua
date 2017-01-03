@@ -200,6 +200,9 @@
     <ClInclude Include="src\thirdparty\ScriptHookV\inc\types.h">
       <Filter>Headers\thirdparty\ScriptHookV</Filter>
     </ClInclude>
+    <ClInclude Include="src\ScriptBinds\LB_ScriptHookV.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Console.cpp">

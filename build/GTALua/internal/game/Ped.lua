@@ -1,6 +1,11 @@
 -- Ped
 class 'Ped'(Entity)
 
+if not c_array_peds then c_array_peds = CMemoryBlock(512) end
+if not c_array_vehs then c_array_vehs = CMemoryBlock(512) end
+if not nearby_peds  then nearby_peds  = {}              ; end
+if not nearby_vehs  then nearby_vehs  = {}              ; end
+
 -- CTor
 function Ped:__init(id)
 	Entity.__init(self, id)
@@ -115,14 +120,12 @@ function Ped:GetNearbyPeds(max_peds)
 	self:_CheckExists()
 	
 	-- default value
-	if max_peds == nil then
-		-- lets just put a high number in here for now
-		max_peds = 100
-	end
+	max_peds = max_peds or 62
 	
 	-- c array
-	local array_size = 2 * max_peds + 2
-	local c_array_peds = CMemoryBlock(array_size * 4)
+	local array_pad  = 8
+	local array_size = array_pad * max_peds + array_pad
+--local c_array_peds = CMemoryBlock(array_size * array_pad + array_pad ) -- Defined as a global so we dont have to keep defining it every call.
 	
 	-- index 0 defines the length of the array
 	c_array_peds:WriteInt32(0, max_peds)
@@ -131,62 +134,93 @@ function Ped:GetNearbyPeds(max_peds)
 	local found=natives.PED.GET_PED_NEARBY_PEDS(self.ID, c_array_peds, -1)
 	
 	-- check returned peds
-	local nearby_peds = {}
+	local new_nearby_peds = {}
 	local i=0
 	while i<found do
-		offset = i*2+2
-		local ped = Ped(c_array_peds:ReadDWORD32(offset))
-		if ped:Exists() then
-			table.insert(nearby_peds, ped)
-		end
+		local offset = i*array_pad+array_pad
+	  local ped = c_array_peds:ReadDWORD32(offset)
+		if type(ped) == "number" and ped > 0 then  table.insert(new_nearby_peds, ped)  ; end
 		i=i+1
 	end
-	
 	-- release
-	c_array_peds:Release()
+	nearby_peds = new_nearby_peds
 	return nearby_peds
 end
 
+
+--[[
+-- All Peds
+function Ped:GetAllPeds(max_peds)
+
+	-- default value
+	max_peds = max_peds or 62
+	
+	-- c array
+	local array_pad  = 8
+	local array_size = array_pad * max_peds + array_pad
+--local c_array_peds = CMemoryBlock(array_size * array_pad + array_pad )
+	
+	-- index 0 defines the length of the array
+	c_array_peds:WriteInt32(0, max_peds)
+
+	-- call native
+	local found = scripthookv.worldGetAllObjects(c_array_peds,max_peds)
+	
+	-- check returned peds
+	local new_nearby_peds = {}
+	local i=0
+	while i<found do
+		local offset = i*array_pad+array_pad
+	  local ped = c_array_peds:ReadDWORD32(offset)
+		if type(ped) == "number" and ped > 0 then  table.insert(new_nearby_peds, ped)  ; end
+		i=i+1
+	end
+	-- release
+	nearby_peds = new_nearby_peds
+	return nearby_peds
+end
+--]]
+
+--------------------
 -- Nearby Vehicles
-function Ped:GetNearbyVehicles(max_vehicles)
+function Ped:GetNearbyVehicles(max_vehs)
 	self:_CheckExists()
 	
 	-- default value
-	if max_vehicles == nil then
-		max_vehicles = 50
-	end
+	max_vehs = math.min( 62, max_vehs or 10 )
 	
 	-- c array
-	local array_size = 2 * max_vehicles + 2
-	local c_array_vehicles = CMemoryBlock(array_size * 4)
-	c_array_vehicles:WriteInt32(0, max_vehicles)
+	local array_pad  = 8
+	local array_size = array_pad * max_vehs + array_pad
+--local c_array_vehs = CMemoryBlock(array_size * 4 + array_pad)
+	c_array_vehs:WriteInt32(0, max_vehs)
 	
 	-- call native
-	local found=natives.PED.GET_PED_NEARBY_VEHICLES(self.ID, c_array_vehicles)
-	
+	local found=natives.PED.GET_PED_NEARBY_VEHICLES(self.ID, c_array_vehs)
+
 	-- check
-	local nearby_vehicles = {}
+	local new_nearby_vehs = {}
 	local i=0
-	while i<found do
-		offset = i*2+2
-		local veh = Vehicle(c_array_vehicles:ReadDWORD32(offset))
-		if veh:Exists() then
-			table.insert(nearby_vehicles, veh)
-		end
+  while i<found do
+		local offset = i*array_pad+array_pad
+	  local veh = c_array_vehs:ReadDWORD32(offset)
+		if type(veh) == "number" and veh > 0 then  table.insert(new_nearby_vehs, veh)  ; end
 		i=i+1
 	end
-	
+
 	-- release
-	c_array_vehicles:Release()
-	return nearby_vehicles
+	nearby_vehs = new_nearby_vehs
+	return nearby_vehs
 end
 
+-----------------------------------------
 -- Set Ped into specified vehicle's seat
 function Ped:SetIntoVehicle(vehicle, seat)
 	self:_CheckExists()
 	natives.PED.SET_PED_INTO_VEHICLE(self.ID, vehicle, seat);
 end
 
+-------------------------------------------
 -- Explode Ped's head
 function Ped:ExplodeHead(weapon)
 	self:_CheckExists()

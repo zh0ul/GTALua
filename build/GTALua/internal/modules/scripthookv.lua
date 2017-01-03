@@ -4,16 +4,15 @@ scripthookv.ActiveThread = nil
 
 -- Types
 scripthookv.TypeTable = {
-	i = "number",
-	f = "number",
+	a = "number",
 	b = "boolean",
+	f = "number",
+	i = "number",
+	m = "CMemoryBlock",
 	s = "string",
+	u = "number",
 	v = "void",
 	V = "Vector",
-	m = "CMemoryBlock",
-	
-	a = "number", -- any = int
-	u = "number", -- unknown = int
 }
 
 -- Find Thread
