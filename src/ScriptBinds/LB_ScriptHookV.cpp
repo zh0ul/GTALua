@@ -5,9 +5,10 @@
 #include "GTALua.h"
 #include "lua/Lua.h"
 #include "ScriptEngine/ScriptEngine.h"
-#include "ScriptBinds.h"
+#include "ScriptBinds/ScriptBinds.h"
 #include "Memory/Memory.h"
 #include "thirdparty/ScriptHookV/ScriptHookV.h"
+#include "thirdparty/ScriptHookV/inc/main.h"
 
 // Imports
 typedef void(*RegisterThread_Proxy_t)();
@@ -34,7 +35,9 @@ void LB_InitNative(Natives::NativeReg* pNative)
 // Start Lua Thread
 // Called from ScriptHookV, but redirected through ASI Addon
 // =================================================================================
+
 vector<ScriptBinds::ScriptThread::LuaScriptThread*> vScriptThreadQueue;
+
 void Lua_StartThread()
 {
 	ScriptHook::CanRegisterThreads = false;
@@ -120,6 +123,7 @@ bool LB_CanRegisterThreads()
 	return ScriptHook::CanRegisterThreads;
 }
 
+
 // =================================================================================
 // Bind 
 // =================================================================================
@@ -127,24 +131,29 @@ void ScriptBinds::ScriptHookBind::Bind()
 {
 	luabind::module(lua->State(), "scripthookv")
 	[
-		luabind::def("CanRegisterThreads", LB_CanRegisterThreads),
-
-		luabind::def("RegisterThread", LB_RegisterThread),
-		luabind::def("ThreadSleep", LB_ThreadSleep),
-		luabind::def("InitNative", LB_InitNative),
-		luabind::def("NativePushInt", ScriptHook::PushValue<__int32>),
-		luabind::def("NativePushFloat", ScriptHook::PushValue<float>),
-		luabind::def("NativePushVector", ScriptHook::PushVector),
-		luabind::def("NativePushBool", ScriptHook::PushValue<bool>),
-		luabind::def("NativePushString", ScriptHook::PushValue<const char*>),
-		luabind::def("NativePushMemoryBlock", ScriptHook::PushMemory),
-		luabind::def("NativeCall_GetInt", ScriptHook::Call<__int32>),
-		luabind::def("NativeCall_GetFloat", ScriptHook::Call<float>),
-		luabind::def("NativeCall_GetVector", ScriptHook::Call<rage::CVector>),
-		luabind::def("NativeCall_GetBool", ScriptHook::Call<bool>),
-		luabind::def("NativeCall_GetString", ScriptHook::Call<const char*>),
-		luabind::def("NativeCall_Void", ScriptHook::CallVoid),
-
-		luabind::def("GetGameTime", ScriptHook::GetGameTime)
+		luabind::def( "CanRegisterThreads",         LB_CanRegisterThreads                  ),
+		luabind::def( "RegisterThread",             LB_RegisterThread                      ),
+		luabind::def( "ThreadSleep",                LB_ThreadSleep                         ),
+		luabind::def( "InitNative",                 LB_InitNative                          ),
+		luabind::def( "NativePushInt",              ScriptHook::PushValue<__int32>         ),
+		luabind::def( "NativePushFloat",            ScriptHook::PushValue<float>           ),
+		luabind::def( "NativePushVector",           ScriptHook::PushVector                 ),
+		luabind::def( "NativePushBool",             ScriptHook::PushValue<bool>            ),
+		luabind::def( "NativePushString",           ScriptHook::PushValue<const char*>     ),
+		luabind::def( "NativePushMemoryBlock",      ScriptHook::PushMemory                 ),
+		luabind::def( "NativeCall_GetInt",          ScriptHook::Call<__int32>              ),
+		luabind::def( "NativeCall_GetFloat",        ScriptHook::Call<float>                ),
+		luabind::def( "NativeCall_GetVector",       ScriptHook::Call<rage::CVector>        ),
+		luabind::def( "NativeCall_GetBool",         ScriptHook::Call<bool>                 ),
+		luabind::def( "NativeCall_GetString",       ScriptHook::Call<const char*>          ),
+		luabind::def( "NativeCall_Void",            ScriptHook::CallVoid                   ),
+		luabind::def( "GetGlobal",                  ScriptHook::GetGlobal                  ),
+		luabind::def( "SetGlobal",                  ScriptHook::SetGlobal                  ),
+//		luabind::def( "worldGetAllVehiclesWrapper", ScriptHook::worldGetAllVehiclesWrapper ),
+//		luabind::def( "worldGetAllPedsWrapper",     ScriptHook::worldGetAllPedsWrapper     ),
+//  	luabind::def( "worldGetAllObjectsWrapper",  ScriptHook::worldGetAllObjectsWrapper  ),
+//  	luabind::def( "worldGetAllPickupsWrapper",  ScriptHook::worldGetAllPickupsWrapper  ),
+		luabind::def( "GetGameTime",                ScriptHook::GetGameTime                ),
+		luabind::def( "GetGameTimer",               ScriptHook::GetGameTime                )
 	];
 }

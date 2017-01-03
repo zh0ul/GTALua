@@ -7,6 +7,7 @@
 #include "UTIL/UTIL.h"
 #include "GameEvents.h"
 
+
 // =================================================================================
 // Typedefs
 // =================================================================================
@@ -37,8 +38,8 @@ __int64* __fastcall World__CreateVehicle(__int64* pThis, __int64* a2, __int64 a3
 // =================================================================================
 // Install
 // =================================================================================
-void GameEvents::Install::OnVehicleCreated()
-{
+//void GameEvents::Install::OnVehicleCreated()
+//{
 	// OnVehicleCreated
-	Memory::HookFunction(GameMemory::Find((PBYTE)"\x48\x8B\xC4\x48\x89\x58\x08\x48\x89\x70\x18\x48\x89\x78\x20\x55\x41\x54\x41\x55\x41\x56\x41\x57\x48\x8D\x68\xB9", "xxxxxxxxxxxxxxxxxxxxxxxxxxxx"), &World__CreateVehicle, (void**)&pWorld_CreateVehicle);
-}
+//	Memory::HookFunction(GameMemory::Find((PBYTE)"\x48\x8B\xC4\x48\x89\x58\x08\x48\x89\x70\x18\x48\x89\x78\x20\x55\x41\x54\x41\x55\x41\x56\x41\x57\x48\x8D\x68\xB9", "xxxxxxxxxxxxxxxxxxxxxxxxxxx"), &World__CreateVehicle, (void**)&pWorld_CreateVehicle);
+//}

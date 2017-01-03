@@ -5,7 +5,7 @@
 #include "GTALua.h"
 #include "lua/Lua.h"
 #include "ScriptEngine/ScriptEngine.h"
-#include "ScriptBinds.h"
+#include "ScriptBinds/ScriptBinds.h"
 
 // =================================================================================
 // Vector 
@@ -14,7 +14,7 @@ struct LuaVectorWrapper : public rage::CVector
 {
 	static string __tostring(rage::CVector* pVec) {
 		char buf[256];
-		sprintf(buf, "[Vector %f %f %f]", pVec->x, pVec->y, pVec->z);
+		sprintf(buf, "Vector(%f,%f,%f)", pVec->x, pVec->y, pVec->z);
 		return string(buf);
 	}
 	static string __type(rage::CVector* pVec) {

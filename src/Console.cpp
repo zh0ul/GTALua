@@ -3,10 +3,9 @@
 // =================================================================================
 #include "Includes.h"
 #include "GTALua.h"
-#include "Memory/Memory.h"
 #include "lua/Lua.h"
+#include "Memory/Memory.h"
 #include "ScriptEngine/ScriptEngine.h"
-#include "ScriptBinds/ScriptBinds.h"
 #include "UTIL/UTIL.h"
 
 // =================================================================================
@@ -53,7 +52,7 @@ void GTALua::ProcessConsoleInput()
 	if (bSuccess)
 	{
 		if (!lua->GetBool())
-			printf("Unknown console command: %s\n", cmd);
+			printf("Unknown console command: %p\n", (void*)cmd.c_str());
 		lua->Pop(3);
 	}
 	else
@@ -69,7 +68,7 @@ void GTALua::ProcessConsoleInput()
 	// Lua: result-check
 	if (!bSuccess)
 	{
-		printf("Unknown console command: %s\n", cmd);
+		printf("Unknown console command: %p\n", (void*)cmd.c_str());
 		return;
 	}
 }

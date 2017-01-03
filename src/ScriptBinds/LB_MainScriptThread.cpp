@@ -45,7 +45,7 @@ void LuaScriptThread::Run_MainThread()
 			// Lua
 			if (!pThread->Call_LuaCallback("SetupCoroutine"))
 			{
-				printf("[LuaScriptThread] Failed to reset Thread %s! Entering Idle State!\n");
+				printf("[LuaScriptThread] Failed to reset Thread %s! Entering Idle State!\n", pThread->m_sName.c_str());
 				pThread->m_bIdleState = true;
 			}
 			else {
@@ -59,7 +59,7 @@ void LuaScriptThread::Run_MainThread()
 		{
 			if (!pThread->Call_LuaCallback("internal_OnTick"))
 			{
-				printf("[LuaScriptThread] Failed to call Thread %s:OnTick!\n");
+				printf("[LuaScriptThread] Failed to call Thread %s:OnTick!\n", pThread->m_sName.c_str());
 			}
 		}
 

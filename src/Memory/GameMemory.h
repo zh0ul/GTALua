@@ -4,8 +4,8 @@
 namespace GameMemory
 {
 	// Init
-	void Init();
-	void FetchVersion();
+	void Init(int majorV, int minorV, int buildV, int revisionV );
+	void FetchVersion(int majorV, int minorV, int buildV, int revisionV);
 
 	// "Installers"
 	void InstallInitHooks();
@@ -18,6 +18,7 @@ namespace GameMemory
 
 	// Version
 	extern char* Version;
+	extern char* Version2;
 
 	// Function Wrappers
 	DWORD64 Find(BYTE* bMask, char* szMask);

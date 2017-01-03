@@ -12,6 +12,7 @@ namespace Memory
 	void Set(DWORD64 pAddress, BYTE* bData, size_t stSize);
 	bool Compare(const BYTE* pData, const BYTE* bMask, const char* szMask);
 	DWORD64 Find(DWORD64 dwAddress, DWORD dwLength, const BYTE* bMask, const char* szMask);
+	intptr_t FindPattern(const char* bMask, const char* sMask);
 
 	// Module Operations
 	char* GetModulePath(HMODULE hPath);

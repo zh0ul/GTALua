@@ -4,7 +4,7 @@
 #include "Includes.h"
 #include "GTALua.h"
 #include "lua/Lua.h"
-#include "ScriptBinds.h"
+#include "ScriptBinds/ScriptBinds.h"
 #include "ScriptEngine/ScriptEngine.h"
 #include "thirdparty/ScriptHookV/ScriptHookV.h"
 #include "UTIL/UTIL.h"
@@ -249,7 +249,6 @@ void LuaScriptThread::Run_IdleState()
 			m_bResetting = false;
 			m_bIdleState = false;
 			printf("[LuaScriptThread] Thread %s reset\n", m_sName.c_str());
-
 			return;
 		}
 
@@ -280,6 +279,7 @@ void LuaScriptThread::Kill()
 	m_bActive = false;
 	m_bResetting = false;
 }
+
 
 // =================================================================================
 // Bind 

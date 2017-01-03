@@ -3,9 +3,9 @@
 // =================================================================================
 #include "Includes.h"
 #include "GTALua.h"
+#include "lua/Lua.h"
 #include "Memory/Memory.h"
 #include "ScriptEngine/ScriptEngine.h"
-#include "lua/Lua.h"
 #include "thirdparty/ScriptHookV/ScriptHookV.h"
 
 // =================================================================================
@@ -33,7 +33,7 @@ int BinkOpen_Hook(DWORD64 a, DWORD64 b)
 	// Skip if first-time-call
 	if (bIsIntroMovie)
 	{
-		printf("[Intro Movie] Skipped\n");
+		printf("Intro Movie Skipped\n");
 
 		bIsIntroMovie = false;
 		return 0;

@@ -3,11 +3,14 @@
 // =================================================================================
 #include "Includes.h"
 #include "Memory.h"
+#include "GTALua.h"
 
 // =================================================================================
 // Member
 // =================================================================================
-char* GameMemory::Version = NULL;
+char* GameMemory::Version  = NULL;
+char* GameMemory::Version2 = NULL;
+
 HMODULE GameMemory::GameModule = NULL;
 DWORD64 GameMemory::Base = NULL;
 DWORD64 GameMemory::Size = NULL;
@@ -16,7 +19,7 @@ bool GameMemory::ScriptEngineInitialized = false;
 // =================================================================================
 // Init
 // =================================================================================
-void GameMemory::Init()
+void GameMemory::Init(int majorV, int minorV, int buildV, int revisionV )
 {
 #ifndef GTA_LUA_TEST_EXE
 	// Module
@@ -39,12 +42,13 @@ void GameMemory::Init()
 	ScriptEngineInitialized = false;
 
 	// Version
-	FetchVersion();
+	FetchVersion( majorV, minorV, buildV, revisionV);
 
 	// Version Check
 	printf("===================================================================\n");
 	printf("Game Version: %s ", Version);
-	if (strcmp(Version, "1.0.350.1") == 0 ||
+	if (
+		strcmp(Version, "1.0.350.1") == 0 ||
 		strcmp(Version, "1.0.350.2") == 0 ||
 		strcmp(Version, "1.0.372.1") == 0 ||
 		strcmp(Version, "1.0.372.2") == 0 ||
@@ -55,14 +59,16 @@ void GameMemory::Init()
 		strcmp(Version, "1.0.505.2") == 0 ||
 		strcmp(Version, "1.0.573.1") == 0 ||
 		strcmp(Version, "1.0.617.1") == 0 ||
-		strcmp(Version, "1.0.678.1") == 0)
+		strcmp(Version, "1.0.678.1") == 0 ||
+	  //strcmp(Version, "1.0.944.2") == 0 ||
+		strcmp(Version, Version2)    == 0
+		)
+	{
 		printf("(Supported)\n");
+	}
 	else
 	{
-		if (strcmp(Version, "1.0.335.1") == 0)
-			printf("(Unsupported)\nThis version is no longer supported! Use GTALua 1.0.0!\n");
-		else
-			printf("\nThis version may not be supported!\n");
+		printf("\nThis version may not be supported!\n");
 	}
 	printf("===================================================================\n");
 
@@ -100,7 +106,7 @@ DWORD64 GameMemory::FindAbsoluteAddress(BYTE* bMask, char* szMask, int iOffset)
 // =================================================================================
 // Version
 // =================================================================================
-void GameMemory::FetchVersion()
+void GameMemory::FetchVersion(int majorV, int minorV, int buildV, int revisionV)
 {
 	// One-Time-Only
 	if (Version != NULL) return;
@@ -176,6 +182,16 @@ void GameMemory::FetchVersion()
 		(pVersionInfo->dwFileVersionMS >> 0) & 0xffff,
 		(pVersionInfo->dwFileVersionLS >> 16) & 0xffff,
 		(pVersionInfo->dwFileVersionLS >> 0) & 0xffff);
+
+	// Build Version2 String
+	Version2 = new char[128];
+	sprintf(Version2, "%d.%d.%d.%d",
+			majorV, 
+			minorV,
+			buildV,
+			revisionV
+	);
+
 
 	// Cleanup
 	free(sVersionFile);

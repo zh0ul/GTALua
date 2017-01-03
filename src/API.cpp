@@ -12,10 +12,10 @@
  */
 // =================================================================================
 #include "Includes.h"
-#include "GTALua.h"
-#include "ScriptEngine/ScriptEngine.h"
-#include "Memory/Memory.h"
+//#include "GTALua.h"
 #include "lua/Lua.h"
+#include "Memory/Memory.h"
+#include "ScriptEngine/ScriptEngine.h"
 #include "thirdparty/ScriptHookV/ScriptHookV.h"
 #include "ScriptBinds/ScriptBinds.h"
 

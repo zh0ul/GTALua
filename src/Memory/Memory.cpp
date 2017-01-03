@@ -23,12 +23,12 @@ void Memory::Set(DWORD64 pAddress, BYTE* bData, size_t stSize)
 {
 	DWORD dwOldProtection;
 	VirtualProtect((void*)pAddress, stSize, PAGE_EXECUTE_READWRITE, &dwOldProtection);
-	memset((void*)pAddress, (int)bData, stSize);
+	memset((void*)pAddress, (INT64)bData, stSize);
 	VirtualProtect((void*)pAddress, stSize, dwOldProtection, &dwOldProtection);
 }
 
 // =================================================================================
-// FindPattern
+// Compare memory.
 // =================================================================================
 bool Memory::Compare(const BYTE* pData, const BYTE* bMask, const char* sMask)
 {
@@ -38,6 +38,10 @@ bool Memory::Compare(const BYTE* pData, const BYTE* bMask, const char* sMask)
 
 	return *sMask == NULL;
 }
+
+// ============
+// Find memory
+//=============
 DWORD64 Memory::Find(DWORD64 dwAddress, DWORD dwLength, const BYTE* bMask, const char* sMask)
 {
 	for (DWORD i = 0; i < dwLength; i++)
@@ -46,6 +50,30 @@ DWORD64 Memory::Find(DWORD64 dwAddress, DWORD dwLength, const BYTE* bMask, const
 
 	return 0;
 }
+
+// ==============
+// Find memory 2
+//===============
+intptr_t Memory::FindPattern(const char* bMask, const char* sMask)
+{
+	// Game Base & Size
+	static intptr_t pGameBase = (intptr_t)GetModuleHandle(nullptr);
+	static uint32_t pGameSize = 0;
+	if (!pGameSize)
+	{
+		MODULEINFO info;
+		GetModuleInformation(GetCurrentProcess(), (HMODULE)pGameBase, &info, sizeof(MODULEINFO));
+		pGameSize = info.SizeOfImage;
+	}
+
+	// Scan
+	for (uint32_t i = 0; i < pGameSize; i++)
+		if (Memory::Compare((uint8_t*)(pGameBase + i), (uint8_t*)bMask, sMask))
+			return pGameBase + i;
+
+	return 0;
+}
+
 
 // =================================================================================
 // Module Path

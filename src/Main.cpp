@@ -3,14 +3,57 @@
 // =================================================================================
 #include "Includes.h"
 #include "GTALua.h"
-#include "Memory/Memory.h"
 #include "lua/Lua.h"
+#include "Memory/Memory.h"
 #include "ScriptEngine/ScriptEngine.h"
 #include "ScriptBinds/ScriptBinds.h"
 #include "UTIL/UTIL.h"
 #include "thirdparty/SimpleFileWatcher/include/FileWatcher.h"
 #include "GameEvents/GameEvents.h"
 #include "thirdparty/ScriptHookV/ScriptHookV.h"
+#include <Windows.h>
+#include <cstdint>
+#include <Psapi.h>
+#pragma comment(lib, "thirdparty/scripthookv/lib/scripthookv.lib")
+
+
+// Unlock all objects.
+void UnlockAllObjects( bool unlockObjects, bool unlockVehicles, int unlockVehiclesGlobal )
+{
+	// Setup object unlocker if  bGame_UnlockObjects=true  in GTALua.ini
+	if (g_pGTALua->GetConfig()->bGame_UnlockObjects)
+	{
+		printf("Trying to Unlock All Objects...\n");
+		static auto checkModelBeforeCreation = Memory::FindPattern("\x48\x85\xC0\x0F\x84\x00\x00\x00\x00\x8B\x48\x50", "xxxxx????xxx");
+		if (!checkModelBeforeCreation)
+		{
+			printf("Unlock All Objects Failed!\n");
+			return;
+		}
+		memset((void*)checkModelBeforeCreation, 0x90, 24);
+		printf("Success!  All Objects Unlocked.\n");
+	}
+	else
+	{
+		printf("Disabled: Unlock All Objects.  To enable, in GTALua.ini , under [GAME], set UnlockObjects = true\n");
+	}
+	
+	// Unlock vehicles
+	if ( unlockVehicles  &&  unlockVehiclesGlobal != 0)
+	{
+		printf("Try: Unlock MP DLC Vehicles @ %d ...", unlockVehiclesGlobal);
+		//const auto GlobalPtr = ScriptHook::GetGlobalPtr(unlockVehiclesGlobal);
+		ScriptHook::SetGlobal(unlockVehiclesGlobal, 4, 1);
+		printf("Success!\n");
+	}
+	else
+	{
+		printf("Disabled: Unlock MP DLC Vehicles.  To enable, in GTALua.ini , Under [GAME], set UnlockVehicles = true\n");
+	}
+}
+
+
+
 
 // =================================================================================
 // CTor/DTor 
@@ -20,6 +63,7 @@ GTALua::GTALua()
 	// Active
 	m_bActive = true;
 }
+
 GTALua::~GTALua()
 {
 	// Update-Thread
@@ -52,14 +96,14 @@ void GTALua::Init()
 #ifndef GTA_LUA_TEST_EXE
 	if (m_sConfig.bConsole_Enabled)
 	{
-		UTIL::Attach_Console(m_sConfig.bConsole_AutomaticPosition, m_sConfig.iConsole_ManualX, m_sConfig.iConsole_ManualY);
+		UTIL::Attach_Console(m_sConfig.bConsole_AutomaticPosition, m_sConfig.iConsole_ManualX, m_sConfig.iConsole_ManualY, m_sConfig.iConsole_SizeX, m_sConfig.iConsole_SizeY );
 		SetConsoleTitle("GTALua - Version 1.1.2");
 	}
 #endif
 
 	// Prepare Memory
 	Memory::Init();
-	GameMemory::Init();
+	GameMemory::Init(m_sConfig.iGame_VersionSupportedMajor, m_sConfig.iGame_VersionSupportedMinor, m_sConfig.iGame_VersionSupportedBuild, m_sConfig.iGame_VersionSupportedRevision );
 
 	// Configuration Files
 	LoadNativesINI();
@@ -82,7 +126,7 @@ void GTALua::ProperInit()
 	// Game Events
 	GameEvents::Install::Entity();
 	GameEvents::Install::OnPedCreated();
-	GameEvents::Install::OnVehicleCreated();
+  //GameEvents::Install::OnVehicleCreated();
 #endif
 
 	// Initialize Lua
@@ -123,6 +167,7 @@ void GTALua::ProperInit()
 		printf("[Lua] Failed to include main.lua! GTALua will not work properly!\n");
 		return;
 	}
+
 }
 
 // =================================================================================
@@ -155,17 +200,20 @@ void GTALua::InitAddons()
 	printf("===================================================================\n\n");
 }
 
+
 // =================================================================================
 // Update 
 // =================================================================================
 void GTALua::Update()
 {
-	// AutoRefresh
+	// AutoRefresh -- Was commented out. Lets see if it works?
+	//             -- Nope...
 	/*if (LuaFunctions::Autorefresh::IsInitialized())
 		LuaFunctions::Autorefresh::Update();*/
 
 	// Console Input
 	ProcessConsoleInput();
+
 }
 
 // =================================================================================
@@ -173,8 +221,13 @@ void GTALua::Update()
 // =================================================================================
 void GTALua::UpdateLoop()
 {
+	// Unlock All Objects
+	UnlockAllObjects(m_sConfig.bGame_UnlockObjects, m_sConfig.bGame_UnlockVehicles, m_sConfig.iGame_UnlockVehiclesGlobal);
+
 	while (m_bActive)
 	{
 		Update();
 	}
+	printf("m_bActive == false\n");
 }
+

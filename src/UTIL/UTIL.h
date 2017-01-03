@@ -3,7 +3,7 @@
 // =================================================================================
 namespace UTIL
 {
-	void Attach_Console(bool bAutomatic, int x, int y);
+	void Attach_Console(bool bAutomatic, int x, int y, int xSize, int ySize);
 
 	void ReplaceString(string& str, const string& from, const string& to);
 	void ParseFilePath(string& path); // replaces \/ /\ // \\ so they can be compared to other paths

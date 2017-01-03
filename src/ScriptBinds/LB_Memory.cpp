@@ -43,6 +43,20 @@ bool MemoryBlock::IsValid()
 }
 
 // =================================================================================
+// Additional Functions
+// =================================================================================
+struct MemoryBlock_AdditionalFunctions : public MemoryBlock
+{
+	static string __tostring(MemoryBlock* pMemoryBlock) {
+		return "CMemoryBlock";
+	}
+	static string __type(MemoryBlock* pNativeReg) {
+		return "CMemoryBlock";
+	}
+
+};
+
+// =================================================================================
 // Bind
 // =================================================================================
 void ScriptBinds::Memory::Bind()
@@ -53,13 +67,17 @@ void ScriptBinds::Memory::Bind()
 		.def(luabind::constructor<int>())
 		.def("Release", &MemoryBlock::Release)
 		.def("IsValid", &MemoryBlock::IsValid)
+        .def("WriteByte", &MemoryBlock::Write<BYTE>)
 		.def("WriteInt64", &MemoryBlock::Write<int>)
 		.def("WriteInt32", &MemoryBlock::Write<__int32>)
 		.def("WriteFloat", &MemoryBlock::Write<float>)
 		.def("WriteDWORD32", &MemoryBlock::Write<DWORD>)
+        .def("ReadByte", &MemoryBlock::Read<BYTE>)
 		.def("ReadInt64", &MemoryBlock::Read<int>)
 		.def("ReadInt32", &MemoryBlock::Read<__int32>)
 		.def("ReadFloat", &MemoryBlock::Read<float>)
 		.def("ReadDWORD32", &MemoryBlock::Read<DWORD>)
+		.def("__tostring", &MemoryBlock_AdditionalFunctions::__tostring)
+		.def("__type", &MemoryBlock_AdditionalFunctions::__type)
 	];
 }

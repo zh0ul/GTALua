@@ -3,8 +3,8 @@
 // =================================================================================
 #include "Includes.h"
 #include "GTALua.h"
-#include "Memory/Memory.h"
 #include "lua/Lua.h"
+#include "Memory/Memory.h"
 
 // =================================================================================
 // Global 
@@ -44,6 +44,7 @@ BOOL __stdcall DllMain(HINSTANCE hModule, DWORD dwReason, LPVOID lpReserved)
 	{
 		Init();
 		CreateThread(0, 0, (LPTHREAD_START_ROUTINE) ThreadInit, 0, 0, 0);
+		printf("[DllMain] DLL_PROCESS_ATTACH\n");
 	}
 
 	// Cleanup
@@ -51,6 +52,7 @@ BOOL __stdcall DllMain(HINSTANCE hModule, DWORD dwReason, LPVOID lpReserved)
 	{
 		delete g_pGTALua;
 		g_pGTALua = NULL;
+		printf("[DllMain] DLL_PROCESS_DETACH\n");
 	}
 
 	// Success

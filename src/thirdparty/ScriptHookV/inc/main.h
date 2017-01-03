@@ -83,7 +83,7 @@ IMPORT void scriptWait(DWORD time);
 IMPORT void scriptRegister(HMODULE module, void(*LP_SCRIPT_MAIN)());
 IMPORT void scriptRegisterAdditionalThread(HMODULE module, void(*LP_SCRIPT_MAIN)());
 IMPORT void scriptUnregister(HMODULE module);
-IMPORT void scriptUnregister(void(*LP_SCRIPT_MAIN)()); // deprecated
+//IMPORT void scriptUnregister(void(*LP_SCRIPT_MAIN)()); // deprecated
 
 IMPORT void nativeInit(UINT64 hash);
 IMPORT void nativePush64(UINT64 val);
@@ -142,6 +142,12 @@ enum eGameVersion : int
 
 	VER_1_0_617_1_STEAM,
 	VER_1_0_617_1_NOSTEAM,
+
+	VER_1_0_877_1_STEAM,
+	VER_1_0_877_1_NOSTEAM,
+
+	VER_1_0_944_2_STEAM,
+	VER_1_0_944_2_NOSTEAM,
 
 	VER_SIZE,
 	VER_UNK = -1

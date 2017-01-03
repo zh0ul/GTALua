@@ -8,7 +8,7 @@
 // Console 
 // _ needed
 // =================================================================================
-void UTIL::Attach_Console(bool bAutomatic, int x, int y)
+void UTIL::Attach_Console(bool bAutomatic, int x, int y, int xSize, int ySize)
 {
 	// Console
 	AllocConsole();
@@ -21,22 +21,26 @@ void UTIL::Attach_Console(bool bAutomatic, int x, int y)
 
 	// Automatic
 	// If you have multiple screens, this will automatically move the console to the 2nd
-	if (bAutomatic && GetSystemMetrics(SM_CMONITORS) > 1)
-	{
+//	if (bAutomatic && GetSystemMetrics(SM_CMONITORS) > 1)
+//	{
 		// Desktop
-		HWND hDesktop = GetDesktopWindow();
-		RECT rDesktopRect;
-		GetWindowRect(hDesktop, &rDesktopRect);
+//		HWND hDesktop = GetDesktopWindow();
+//		RECT rDesktopRect;
+//		GetWindowRect(hDesktop, &rDesktopRect);
 
 		// Update Position
-		SetWindowPos(hConsole, NULL, rDesktopRect.right + 100, 50, rect.right - rect.left, rect.bottom - rect.top, 0);
-	}
+//		SetWindowPos(hConsole, NULL, rDesktopRect.right + 100, 50, rect.right - rect.left, rect.bottom - rect.top, 0);
+//	}
 
-	// Manual
-	if (!bAutomatic)
+	if (bAutomatic)
 	{
-		// Update Position
-		SetWindowPos(hConsole, NULL, x, y, rect.right - rect.left, rect.bottom - rect.top, 0);
+		// Automatic Window Position
+		SetWindowPos(hConsole, HWND_NOTOPMOST, x, y, 1440, 900, SWP_SHOWWINDOW);
+	}
+	else
+	{
+		// Manual Window Position
+		SetWindowPos(hConsole, HWND_NOTOPMOST, x, y, xSize, ySize, SWP_SHOWWINDOW);
 	}
 
 	// Input/Output
