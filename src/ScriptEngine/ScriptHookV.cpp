@@ -98,7 +98,7 @@ static int ScriptHook::worldGetAllVehiclesWrapper()
 	int i;
 	for (i = 1; i < arrSize; i++)
 		lua_pushinteger(L, arr[i]);
-	lua_rawseti(L, -2, i + 1);
+	    lua_rawseti(L, -2, i + 1);
 
 	lua_close(L);
 
@@ -124,7 +124,7 @@ static int ScriptHook::worldGetAllPedsWrapper()
 	int i;
 	for (i = 1; i < arrSize; i++)
 		lua_pushinteger(L, arr[i]);
-	lua_rawseti(L, -2, i + 1);
+	    lua_rawseti(L, -2, i + 1);
 
 	lua_close(L);
 
@@ -150,7 +150,7 @@ static int ScriptHook::worldGetAllObjectsWrapper()
 	int i;
 	for (i = 1; i < arrSize; i++)
 		lua_pushinteger(L, arr[i]);
-	lua_rawseti(L, -2, i + 1);
+	    lua_rawseti(L, -2, i + 1);
 
 	lua_close(L);
 
@@ -240,18 +240,38 @@ PUINT64 ScriptHook::NativeCall()
 int ScriptHook::GetGlobal(int GlobalId, int Offset)
 {
 	UINT64 *result = ScriptHook::GetGlobalPtr(GlobalId);
-	result += Offset;
-	return *result;
+	if (result != nullptr)
+	{
+		result += Offset;
+		if (result != nullptr)
+		{
+			return *result;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+	else
+	{
+		return 0;
+	}
 }
 
 void ScriptHook::SetGlobal(int GlobalId, int Offset, int Value)
 {
 	UINT64 *result = ScriptHook::GetGlobalPtr(GlobalId);
-	result += Offset;
-	DWORD dwOldProtection;
-	VirtualProtect(GlobalId, 4, PAGE_EXECUTE_READWRITE, &dwOldProtection);
-	*result = Value;
-	VirtualProtect(GlobalId, 4, dwOldProtection, &dwOldProtection);
+	if (result != nullptr)
+	{
+		result += Offset;
+		DWORD dwOldProtection;
+		VirtualProtect((void*)result, 8, PAGE_EXECUTE_READWRITE, &dwOldProtection);
+		*result = Value;
+		if (PAGE_EXECUTE_READWRITE != dwOldProtection)
+		{
+			VirtualProtect((void*)result, 8, dwOldProtection, &dwOldProtection);
+		}
+	}
 }
 
 void ScriptHook::KeyboardHandlerRegister(KeyboardHandler handler)

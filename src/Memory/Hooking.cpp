@@ -48,6 +48,10 @@ bool Memory::HookFunction(DWORD64 pAddress, void* pDetour, void** ppOriginal)
 	// Success
 	return true;
 }
+
+// =================================================================================
+// Hook Library Function
+// =================================================================================
 bool Memory::HookLibraryFunction(char* sLibrary, char* sName, void* pDetour, void** ppOriginal)
 {
 	// Module

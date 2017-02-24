@@ -28,6 +28,7 @@ void ThreadInit()
 {
 	// Wait for GTALua
 	while (g_pGTALua == NULL)
+		printf("[DLLMain.cpp] Waiting for g_pGTALua...");
 		Sleep(200);
 
 	// Update

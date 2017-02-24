@@ -4,12 +4,12 @@
 namespace UTIL
 {
 	void Attach_Console(bool bAutomatic, int x, int y, int xSize, int ySize);
-
+	void Show_Console();
 	void ReplaceString(string& str, const string& from, const string& to);
 	void ParseFilePath(string& path); // replaces \/ /\ // \\ so they can be compared to other paths
 	string SplitFilename(string& str);
 	vector<string> SplitString(string str, string del);
-
+	
 	void Lowercase(char* sText);
 	void Uppercase(char* sText);
 };

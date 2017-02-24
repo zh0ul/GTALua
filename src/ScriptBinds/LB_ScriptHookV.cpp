@@ -9,6 +9,7 @@
 #include "Memory/Memory.h"
 #include "thirdparty/ScriptHookV/ScriptHookV.h"
 #include "thirdparty/ScriptHookV/inc/main.h"
+#include "UTIL/UTIL.h"
 
 // Imports
 typedef void(*RegisterThread_Proxy_t)();

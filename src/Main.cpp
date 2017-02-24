@@ -18,7 +18,7 @@
 
 
 // Unlock all objects.
-void UnlockAllObjects( bool unlockObjects, bool unlockVehicles, int unlockVehiclesGlobal )
+void UnlockAllObjects( bool unlockObjects )
 {
 	// Setup object unlocker if  bGame_UnlockObjects=true  in GTALua.ini
 	if (g_pGTALua->GetConfig()->bGame_UnlockObjects)
@@ -36,19 +36,6 @@ void UnlockAllObjects( bool unlockObjects, bool unlockVehicles, int unlockVehicl
 	else
 	{
 		printf("Disabled: Unlock All Objects.  To enable, in GTALua.ini , under [GAME], set UnlockObjects = true\n");
-	}
-	
-	// Unlock vehicles
-	if ( unlockVehicles  &&  unlockVehiclesGlobal != 0)
-	{
-		printf("Try: Unlock MP DLC Vehicles @ %d ...", unlockVehiclesGlobal);
-		//const auto GlobalPtr = ScriptHook::GetGlobalPtr(unlockVehiclesGlobal);
-		ScriptHook::SetGlobal(unlockVehiclesGlobal, 4, 1);
-		printf("Success!\n");
-	}
-	else
-	{
-		printf("Disabled: Unlock MP DLC Vehicles.  To enable, in GTALua.ini , Under [GAME], set UnlockVehicles = true\n");
 	}
 }
 
@@ -222,7 +209,7 @@ void GTALua::Update()
 void GTALua::UpdateLoop()
 {
 	// Unlock All Objects
-	UnlockAllObjects(m_sConfig.bGame_UnlockObjects, m_sConfig.bGame_UnlockVehicles, m_sConfig.iGame_UnlockVehiclesGlobal);
+	UnlockAllObjects(m_sConfig.bGame_UnlockObjects);
 
 	while (m_bActive)
 	{

@@ -7,6 +7,7 @@
 #include "ScriptEngine/ScriptEngine.h"
 #include "ScriptBinds.h"
 #include "Memory/Memory.h"
+#include "UTIL/UTIL.h"
 
 // =================================================================================
 // type 
@@ -115,7 +116,8 @@ void ScriptBinds::GeneralFunctions::Bind()
 		luabind::def("IsKeyCurrentlyDown", LB_IsKeyCurrentlyDown),
 		luabind::def("IsKeyDown", LB_IsKeyDown),
 		// TODO: Add game module
-		luabind::def("IsScriptEngineInitialized", LB_IsScriptEngineInitialized)
+		luabind::def("IsScriptEngineInitialized", LB_IsScriptEngineInitialized),
+		luabind::def("SetFocus", UTIL::Show_Console)
 	];
 
 	// print (luabind doesnt support va)

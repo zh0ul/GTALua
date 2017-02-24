@@ -22,6 +22,9 @@ bool GameMemory::ScriptEngineInitialized = false;
 void GameMemory::Init(int majorV, int minorV, int buildV, int revisionV )
 {
 #ifndef GTA_LUA_TEST_EXE
+
+	// FYI: Game version supported now comes from GTALua.ini
+
 	// Module
 	GameModule = GetModuleHandle("GTA5.exe");
 	if (GameModule == NULL)
@@ -46,20 +49,21 @@ void GameMemory::Init(int majorV, int minorV, int buildV, int revisionV )
 
 	// Version Check
 	printf("===================================================================\n");
-	printf("Game Version: %s ", Version);
+	printf("     Game Version: %s", Version);
+	printf("Supported Version: %s", Version2);
 	if (
-		strcmp(Version, "1.0.350.1") == 0 ||
-		strcmp(Version, "1.0.350.2") == 0 ||
-		strcmp(Version, "1.0.372.1") == 0 ||
-		strcmp(Version, "1.0.372.2") == 0 ||
-		strcmp(Version, "1.0.393.2") == 0 ||
-		strcmp(Version, "1.0.393.4") == 0 ||
-		strcmp(Version, "1.0.440.2") == 0 ||
-		strcmp(Version, "1.0.463.1") == 0 ||
-		strcmp(Version, "1.0.505.2") == 0 ||
-		strcmp(Version, "1.0.573.1") == 0 ||
-		strcmp(Version, "1.0.617.1") == 0 ||
-		strcmp(Version, "1.0.678.1") == 0 ||
+	  //strcmp(Version, "1.0.350.1") == 0 ||
+	  //strcmp(Version, "1.0.350.2") == 0 ||
+	  //strcmp(Version, "1.0.372.1") == 0 ||
+	  //strcmp(Version, "1.0.372.2") == 0 ||
+	  //strcmp(Version, "1.0.393.2") == 0 ||
+	  //strcmp(Version, "1.0.393.4") == 0 ||
+	  //strcmp(Version, "1.0.440.2") == 0 ||
+	  //strcmp(Version, "1.0.463.1") == 0 ||
+	  //strcmp(Version, "1.0.505.2") == 0 ||
+	  //strcmp(Version, "1.0.573.1") == 0 ||
+	  //strcmp(Version, "1.0.617.1") == 0 ||
+	  //strcmp(Version, "1.0.678.1") == 0 ||
 	  //strcmp(Version, "1.0.944.2") == 0 ||
 		strcmp(Version, Version2)    == 0
 		)

@@ -16,7 +16,7 @@ void GTALua::ProcessConsoleInput()
 	// Input
 	string input_line;
 	getline(cin, input_line);
-
+	
 	// Pre-Lua?
 	if (lua == NULL)
 	{
